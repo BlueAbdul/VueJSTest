@@ -55,10 +55,13 @@
                 <th class="text-center">Montant total</th>
               </tr>
             </thead>
+            <button v-bind:class="{ show : isEmpty}" class="btn btn-info hide" @click="add()"> Ajouter prestation </button>
             <tbody>
-              <tr>
+              <tr v-for='(bill,index) in bill.prestations' :key='index'>
+                
                 <td>
                   <svg
+                    @click="add()"
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
@@ -74,6 +77,7 @@
                     />
                   </svg>
                   <svg
+                    @click="supprimer(index)"
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
@@ -91,126 +95,27 @@
                   </svg>
                 </td>
                 <td>
-                  <input type="text" disabled="disabled" v-model="bill.prestations[0].description">
+                  <input type="text"  v-model="bill.description">
                 </td>
                 <td>
-                  <input type="number"  v-model="bill.prestations[0].qty">
+                  <input type="number"  v-model="bill.qty">
                 </td>
                 <td>
-                  <input type="number" disabled="disabled" v-model="bill.prestations[0].price">
+                  <input type="number"  v-model="bill.price">
                 </td>
                  <td>
-                  <input type="number" disabled="disabled" v-model="total[0]">
+                  <input type="number"  :value="total(bill.qty,bill.price)">
                 </td>
               </tr>
-              <tr>
-                <td>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-plus-circle"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                    />
-                    <path
-                      d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
-                    />
-                  </svg>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="red"
-                    class="bi bi-trash"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
-                    />
-                  </svg>
-                </td>
-                <td>
-                  <input type="text" disabled="disabled" v-model="bill.prestations[1].description">
-                </td>
-                <td>
-                  <input type="number"  v-model="bill.prestations[1].qty">
-                </td>
-                <td>
-                  <input type="number" disabled="disabled" v-model="bill.prestations[1].price">
-                </td>
-                 <td>
-                  <input type="number" disabled="disabled" v-model="total[1]">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-plus-circle"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
-                    />
-                    <path
-                      d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
-                    />
-                  </svg>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="red"
-                    class="bi bi-trash"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
-                    />
-                  </svg>
-                </td>
-                <td>
-                  <input type="text" disabled="disabled" v-model="bill.prestations[2].description">
-                </td>
-                <td>
-                  <input type="number"  v-model="bill.prestations[2].qty">
-                </td>
-                <td>
-                  <input type="number" disabled="disabled" v-model="bill.prestations[2].price">
-                </td>
-                 <td>
-                  <input type="number" disabled="disabled" v-model="total[2]">
-                </td>
-              </tr>
-              <tr>
+                <tr>
                 <td colspan="3"></td>
                 <td>Remise :</td>
-                <td><input type="number" disabled="disabled" v-model="bill.discount"></td>
+                <td><input type="number"  v-model="bill.discount"></td>
               </tr>
               <tr>
                 <td colspan="3"></td>
                 <td>Déjà payé :</td>
-                <td><input type="number" disabled="disabled" v-model="bill.paid"></td>
-              </tr>
-              <tr>
-                <td colspan="3"></td>
-                <td>Total HT :</td>
-                <td><input type="number" disabled="disabled" v-model="totalHT"></td>
+                <td><input type="number"  v-model="bill.paid"></td>
               </tr>
               <tr>
                 <td colspan="3"></td>
@@ -274,21 +179,15 @@ export default {
     fullname() {
       return `${this.bill.client.firstname} ${this.bill.client.lastname}`;
     },
-    total(){
-
-      let array = [];
-      this.bill.prestations.forEach((e) =>{
-       let result =  e.qty * e.price
-       array.push(result)
-      })
-      return array
-    },
     totalHT(){
       let ht = 0;
       this.bill.prestations.forEach((e) =>{
        let result =  e.qty * e.price
        ht += result
       })
+
+      ht -= this.bill.paid
+      ht -= this.bill.discount
       
       return ht;
     },
@@ -302,8 +201,36 @@ export default {
     totalTTC(){
       let totalTTC = this.totalHT + this.tva
       return totalTTC
+    },
+    isEmpty(){
+      let empty = false
+      if(this.bill.prestations.length < 1){
+          empty = true
+                  
+      }
+      return empty
+     
     }
   },
+
+  methods:{
+    total(qty,price){
+       let result =  qty * price
+      return result
+    },
+    supprimer(i){
+      this.bill.prestations.splice(i,1)
+    },
+    add(){
+      let newPrest =  {
+            description: "Nouvelle prestation",
+            qty: 1,
+            price: 450.0,
+          }
+
+       this.bill.prestations.push(newPrest);   
+    }
+  }
 };
 </script>
 
@@ -320,5 +247,13 @@ th {
 }
 label {
   min-width: 100px;
+}
+
+.hide{
+  display: none;
+}
+
+.show{
+  display: block;
 }
 </style>
