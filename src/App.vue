@@ -55,10 +55,9 @@
                 <th class="text-center">Montant total</th>
               </tr>
             </thead>
-            <button v-bind:class="{ show : isEmpty}" class="btn btn-info hide" @click="add()"> Ajouter prestation </button>
+            <button v-if="empty" class="btn btn-info" @click="add(), isNotEmpty()"> Ajouter prestation </button>
             <tbody>
-              <tr v-for='(bill,index) in bill.prestations' :key='index'>
-                
+              <tr v-for='(bill,index) in bill.prestations'  :key='index'>
                 <td>
                   <svg
                     @click="add()"
@@ -77,7 +76,7 @@
                     />
                   </svg>
                   <svg
-                    @click="supprimer(index)"
+                    @click="supprimer(index), isEmpty()"
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
@@ -143,6 +142,7 @@ export default {
   data() {
     return {
       title: "Hello world",
+      empty:false,
       bill: {
         id: 1,
         date: new Date().getDay(),
@@ -196,20 +196,11 @@ export default {
       if(this.bill.tva == true){
         tva = this.totalHT * 0.2
       }
-      return tva
+      return Math.round(tva * 100) / 100
     },
     totalTTC(){
       let totalTTC = this.totalHT + this.tva
       return totalTTC
-    },
-    isEmpty(){
-      let empty = false
-      if(this.bill.prestations.length < 1){
-          empty = true
-                  
-      }
-      return empty
-     
     }
   },
 
@@ -229,6 +220,23 @@ export default {
           }
 
        this.bill.prestations.push(newPrest);   
+    },
+    isEmpty(){
+      
+      if(this.bill.prestations.length < 1){
+          this.empty = true        
+      }
+      return this.empty
+     
+    },
+    isNotEmpty(){
+      
+     
+      if(this.bill.prestations.length >= 1){
+          this.empty = false        
+      }
+      return this.empty
+     
     }
   }
 };
